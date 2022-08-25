@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -16,7 +17,7 @@ int try_open_mmap() {
     }
 
     if (0 != ftruncate(fd, FILE_SIZE)) {
-        fprintf(stderr, "ftruncate failed. Reason: %d\n", errno);
+        fprintf(stderr, "ftruncate fd failed. Reason: %d\n", errno);
         return 1;
     }
 
@@ -28,7 +29,22 @@ int try_open_mmap() {
     }
 
     // create mfd
+    int fd_mem = memfd_create("memfd", MFD_CLOEXEC);
+    if (fd_mem == -1) {
+        fprintf(stderr, "memfd failed. Reason: %d\n", errno);
+        return 1;
+    }
 
+    if (0 != ftruncate(fd_mem, FILE_SIZE)) {
+        fprintf(stderr, "ftruncate fd_mem failed. Reason: %d\n", errno);
+        return 1;
+    }
+
+    void* mem_memfd = mmap(NULL, FILE_SIZE, PROT_WRITE, MAP_SHARED, fd_mem, 0);
+    if (mem_memfd == MAP_FAILED) {
+        fprintf(stderr, "mmap fd_mem failed. Reason: %d\n", errno);
+        return 1;
+    }
 
     // write to these memory
     char* text = (char*)mem;
@@ -36,14 +52,22 @@ int try_open_mmap() {
     text[1] = 'B';
     text[2] = 'C';
     text[3] = '\0';
+    printf("mem: %s\n", text);
+
+    text = (char*)mem_memfd;
+    text[0] = '_';
+    text[1] = 'f';
+    text[2] = 'd';
+    text[3] = '\0';
 
     // read
-    printf("text: %s\n", text);
+    printf("mem_memfd: %s\n", text);
 
     // cleanup
     munmap(mem, FILE_SIZE);
+    munmap(mem_memfd, FILE_SIZE);
+    close(fd_mem);
     close(fd);
-    // fclose(file_ptr);
 
     return 0;
 }
