@@ -1,12 +1,8 @@
 #!/bin/bash
 
-install_build_essential() {
-    sudo apt update
-    sudo apt install -y build-essential
-}
-
 install_command_dev_tool() {
-    sudo apt install -y tree git vim make zsh
+    sudo apt update
+    sudo apt install -y build-essential tree git vim make zsh
 }
 
 setup_shell() {
@@ -31,10 +27,20 @@ setup_shell() {
     git config --global user.name "Zijie Wu"
 }
 
+install_homebrew() {
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+
+install_github_cli_tool() {
+    brew update
+    brew install gh
+}
+
 main() {
-    # install_build_essential
-    # install_command_dev_tool
-    # setup_shell
+    install_command_dev_tool
+    setup_shell
+    install_homebrew
+    install_github_cli_tool
 }
 
 # Script starts here
