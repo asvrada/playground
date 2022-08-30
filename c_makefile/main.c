@@ -5,6 +5,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include "unused/unused.h"
+
 #define FILE_SIZE 1024
 #define FILE_NAME "tmp.txt"
 
@@ -72,8 +74,19 @@ int try_open_mmap() {
     return 0;
 }
 
+int try_unused_list_string() {
+    printf("Size: %ld\n", sizeof(list_string));
+
+    for (size_t i = 0; list_string[i]; i++) {
+        printf("%ld: %s\n", i, list_string[i]);
+    }
+
+    printf("end\n");
+    return 0;
+}
+
 int main() {
-    if (0 != try_open_mmap()) {
+    if (0 != try_unused_list_string()) {
         return 1;
     }
 
