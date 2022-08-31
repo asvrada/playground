@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <pthread.h>
 
 #include "unused/unused.h"
 
@@ -85,8 +86,40 @@ int try_unused_list_string() {
     return 0;
 }
 
+int try_fork_hello_world() {
+    int pid = fork();
+
+    if (pid == 0) {
+        // child
+        printf("Child Pid: Hello World\n");
+        sleep(100000);
+        printf("Child: Done sleeping");
+    } else {
+        // parent
+        printf("Parent Pid: Hello World\n");
+    }
+
+    return 0;
+}
+
+void* print_hello_world() {
+    printf("Child Thread: Hello World!\n");
+    sleep(100);
+    printf("Child Thread: Done\n");
+
+    return NULL;
+}
+
+int try_thread_hello_world() {
+    pthread_t thread_child;
+    pthread_create(&thread_child, NULL, print_hello_world, NULL);
+    pthread_join(thread_child, NULL);
+    printf("Thread created\n");
+    return 0;
+}
+
 int main() {
-    if (0 != try_unused_list_string()) {
+    if (0 != try_thread_hello_world()) {
         return 1;
     }
 
