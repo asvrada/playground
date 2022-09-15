@@ -1,0 +1,12 @@
+{
+    "Debug": 1,
+    "ProductID": 1,
+    "SecurityVersion": 1,
+
+    "MemorySize": "128m",
+    "CurrentWorkingDirectory": "/",
+    "AppliationPath": "/bin/main",
+    "HostApplicationParameters": 1,
+
+    "ForkMode": "pseudo_wait_for_exit_exec"
+}

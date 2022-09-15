@@ -114,7 +114,7 @@ int try_thread_hello_world() {
     pthread_t thread_child;
     pthread_create(&thread_child, NULL, print_hello_world, NULL);
     pthread_join(thread_child, NULL);
-    printf("Thread created\n");
+    printf("Thread finished\n");
     return 0;
 }
 
