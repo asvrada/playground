@@ -7,6 +7,6 @@
     if (exp) { \
         fprintf(stderr, "%s:%d: ret code non-zero\n", __FILE__, __LINE__); \
     } \
-} while(0);
+} while(0)
 
 #endif
